@@ -1,0 +1,6 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; img-src 'self' https://codex-reset.com data:; script-src 'self'; style-src 'self'; connect-src https://codex-reset.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
