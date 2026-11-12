@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Codex Reset Developer Hub — API, MCP and OpenAPI</title>
+  <meta name="description" content="Build with the public Codex Reset JSON API and read-only MCP server. No API key; visible source credit is required for public reuse.">
+  <link rel="canonical" href="https://developers.codex-reset.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Codex Reset Developer Hub">
+  <meta property="og:description" content="Public JSON API, read-only MCP server and OpenAPI description for Codex reset data.">
+  <meta property="og:url" content="https://developers.codex-reset.com/">
+  <meta property="og:image" content="https://codex-reset.com/og-image.png?v=9">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#08111f">
+  <link rel="icon" href="https://codex-reset.com/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="topbar">
+    <a class="brand" href="https://codex-reset.com/" aria-label="Codex Reset home">
+      <img src="https://codex-reset.com/favicon.svg" width="28" height="28" alt="">
+      <span>codex-reset.com</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="#quickstart">Quickstart</a>
+      <a href="#endpoints">Endpoints</a>
+      <a href="#mcp">MCP</a>
+      <a href="https://codex-reset.com/developers">Full docs</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap">
+      <p class="eyebrow">API · MCP · OpenAPI</p>
+      <h1>Build with Codex Reset data</h1>
+      <p class="lede">Read the experimental reset forecast, dated reset history, public announcement feed and Codex service status through a public JSON API or a read-only MCP server.</p>
+      <p class="disclosure">Disclosure: this hub is maintained by the people who build <a href="https://codex-reset.com/">codex-reset.com</a>.</p>
+      <div class="actions">
+        <a class="button primary" href="https://codex-reset.com/developers">Open full developer documentation</a>
+        <a class="button secondary" href="https://codex-reset.com/openapi.json">View OpenAPI JSON</a>
+      </div>
+      <ul class="facts" aria-label="Access summary">
+        <li><strong>No API key</strong><span>No sign-up or rate plan</span></li>
+        <li><strong>Read-only</strong><span>Public integration surfaces</span></li>
+        <li><strong>Credit required</strong><span>For public reuse</span></li>
+      </ul>
+    </section>
+
+    <section class="live-band" aria-labelledby="live-heading">
+      <div class="wrap live-grid">
+        <div>
+          <p class="eyebrow">Live public response</p>
+          <h2 id="live-heading">Current forecast snapshot</h2>
+          <p class="muted">Loaded directly from <code>/api/forecast</code>. Forecasts are experimental and are not promises.</p>
+        </div>
+        <div class="live-card" aria-live="polite" aria-busy="true" id="forecast-card">
+          <div><span>24 hours</span><strong id="p24">—</strong></div>
+          <div><span>48 hours</span><strong id="p48">—</strong></div>
+          <div><span>Confidence</span><strong id="confidence">Loading</strong></div>
+          <p id="forecast-time">Contacting the public API…</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap section" id="quickstart" aria-labelledby="quickstart-heading">
+      <div class="section-heading">
+        <p class="eyebrow">One request</p>
+        <h2 id="quickstart-heading">Quickstart</h2>
+      </div>
+      <div class="code-card">
+        <div class="code-label">curl</div>
+        <pre><code>curl -sS https://codex-reset.com/api/forecast \
+  -A 'myproject/1.0 (+https://myproject.example)' \
+  | jq '{p24: .probabilities.rounded_24h,
+         p48: .probabilities.rounded_48h,
+         last: .last_reset_at}'</code></pre>
+      </div>
+      <p class="note"><strong>Server-side readers:</strong> send a User-Agent that names your project and gives a contact URL. Poll at most once a minute and honor <code>Retry-After</code> on a 429.</p>
+    </section>
+
+    <section class="wrap section" id="endpoints" aria-labelledby="endpoints-heading">
+      <div class="section-heading">
+        <p class="eyebrow">Stable public reads</p>
+        <h2 id="endpoints-heading">JSON endpoints</h2>
+      </div>
+      <div class="cards">
+        <article class="card">
+          <p class="method">GET</p>
+          <h3><a href="https://codex-reset.com/api/forecast">/api/forecast</a></h3>
+          <p>24-hour and 48-hour forecast, confidence, last verified reset and any active official signal.</p>
+        </article>
+        <article class="card">
+          <p class="method">GET</p>
+          <h3><a href="https://codex-reset.com/api/timeline">/api/timeline</a></h3>
+          <p>Dated reset and banked-reset record with source URLs and documented filters.</p>
+        </article>
+        <article class="card">
+          <p class="method">GET</p>
+          <h3><a href="https://codex-reset.com/api/feed">/api/feed</a></h3>
+          <p>Public announcement feed, freshness timestamps and the current headline signal.</p>
+        </article>
+        <article class="card">
+          <p class="method">GET</p>
+          <h3><a href="https://codex-reset.com/api/status-history">/api/status-history</a></h3>
+          <p>Current Codex service state and the incident record, useful for separating outages from usage limits.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="wrap section split" id="mcp" aria-labelledby="mcp-heading">
+      <div>
+        <p class="eyebrow">For agents</p>
+        <h2 id="mcp-heading">Read-only MCP server</h2>
+        <p>Point any Streamable HTTP MCP client at the endpoint below. The server exposes forecast, timeline and service-status tools.</p>
+        <div class="endpoint"><code>https://codex-reset.com/mcp</code></div>
+      </div>
+      <div class="code-card compact">
+        <div class="code-label">Codex config.toml</div>
+        <pre><code>[mcp_servers.codex-reset]
+url = "https://codex-reset.com/mcp"</code></pre>
+      </div>
+    </section>
+
+    <section class="wrap section" aria-labelledby="credit-heading">
+      <div class="credit-box">
+        <div>
+          <p class="eyebrow">One condition</p>
+          <h2 id="credit-heading">Show the source</h2>
+        </div>
+        <div>
+          <p>If your site, app, bot, dashboard, API or MCP server shows this data to other people, name and link the source on the same surface.</p>
+          <p class="copy-line">Data: <a href="https://codex-reset.com/">codex-reset.com</a></p>
+          <p class="muted">Private scripts do not need visible credit, but server-side readers still need an identifying User-Agent.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap section limitations" aria-labelledby="limits-heading">
+      <p class="eyebrow">Boundaries</p>
+      <h2 id="limits-heading">Use the data honestly</h2>
+      <ul>
+        <li>The forecast is experimental. It is not an OpenAI schedule, leak, promise or commitment.</li>
+        <li>A rising forecast is not a reset. Use the dated timeline to determine whether a reset was announced.</li>
+        <li>Depend only on documented fields. Other response fields may change or disappear.</li>
+        <li>The service cannot see your OpenAI account, quota or personal usage.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-grid">
+      <div>
+        <strong>Codex Reset Developer Hub</strong>
+        <p>Independent tracker built for the Codex community. Not affiliated with OpenAI.</p>
+      </div>
+      <nav aria-label="Footer navigation">
+        <a href="https://codex-reset.com/developers">Developer docs</a>
+        <a href="https://codex-reset.com/openapi.json">OpenAPI</a>
+        <a href="https://codex-reset.com/llms.txt">llms.txt</a>
+        <a href="https://codex-reset.com/terms">Terms</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
